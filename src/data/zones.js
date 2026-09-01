@@ -1,0 +1,58 @@
+// The clickable areas of the shop floor.
+// pad = [x, y, w, d] footprint in grid units (floor is 0..9 on both axes).
+export const shopZones = [
+  {
+    id: 'projects',
+    plate: 'BUILD BAY',
+    name: 'Projects',
+    desc: 'SAE Aero Design — drawings on the table',
+    pad: [3.6, 3.1, 3.5, 2.9],
+    labelAt: [5.35, 4.55],
+    labelZ: 2.1,
+  },
+  {
+    id: 'skills',
+    plate: 'TOOL WALL',
+    name: 'Skills',
+    desc: 'Everything I can actually operate',
+    pad: [2.2, 0, 4.6, 1.9],
+    labelAt: [4.5, 0.95],
+    labelZ: 3.4,
+  },
+  {
+    id: 'experience',
+    plate: 'THE POSTERS',
+    name: 'Experience',
+    desc: 'Where the work has been done',
+    pad: [0, 1.3, 1.7, 3.1],
+    labelAt: [0.85, 2.85],
+    labelZ: 3.4,
+  },
+  {
+    id: 'education',
+    plate: 'THE FRAME',
+    name: 'Education',
+    desc: 'Degree, honours, coursework',
+    pad: [0, 5.0, 1.6, 2.2],
+    labelAt: [0.8, 6.1],
+    labelZ: 3.4,
+  },
+  {
+    id: 'about',
+    plate: 'THE DESK',
+    name: 'About',
+    desc: 'Who is running the shop',
+    pad: [1.9, 5.7, 2.2, 2.4],
+    labelAt: [3.0, 6.9],
+    labelZ: 1.9,
+  },
+  {
+    id: 'contact',
+    plate: 'FRONT DESK',
+    name: 'Contact',
+    desc: 'Raise a work order',
+    pad: [6.7, 6.5, 2.2, 2.1],
+    labelAt: [7.8, 7.55],
+    labelZ: 2.0,
+  },
+]
