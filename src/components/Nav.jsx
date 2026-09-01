@@ -66,14 +66,16 @@ export default function Nav({ active }) {
           ))}
         </ul>
 
-        <a
-          href={contact.resumeHref}
-          download={contact.resumeFilename}
-          className="cur-lg sign-type shrink-0 rounded-[2px] px-3 py-[6px] text-[10px] transition-transform duration-150 hover:-translate-y-[1px]"
-          style={{ background: 'var(--orange)', color: 'var(--steel)' }}
-        >
-          Résumé ↓
-        </a>
+        {contact.resumeHref && (
+          <a
+            href={contact.resumeHref}
+            download={contact.resumeFilename}
+            className="cur-lg sign-type shrink-0 rounded-[2px] px-3 py-[6px] text-[10px] transition-transform duration-150 hover:-translate-y-[1px]"
+            style={{ background: 'var(--orange)', color: 'var(--steel)' }}
+          >
+            Résumé ↓
+          </a>
+        )}
       </nav>
     </header>
   )

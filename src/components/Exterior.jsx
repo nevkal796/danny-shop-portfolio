@@ -128,18 +128,20 @@ export default function Exterior({ onEnter, openHobbies }) {
 
         {/* ── FRONT DESK STRIP ──────────────────────────────── */}
         <footer className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-white/10 pt-5">
-          <a
-            className="cur-lg sign-type rounded-[2px] px-4 py-2 text-[11px] transition-transform duration-150 hover:-translate-y-[1px]"
-            style={{
-              background: 'var(--orange)',
-              color: 'var(--steel)',
-              boxShadow: '0 6px 18px rgba(255,107,26,.28)',
-            }}
-            href={contact.resumeHref}
-            download={contact.resumeFilename}
-          >
-            Spec sheet ↓ résumé
-          </a>
+          {contact.resumeHref && (
+            <a
+              className="cur-lg sign-type rounded-[2px] px-4 py-2 text-[11px] transition-transform duration-150 hover:-translate-y-[1px]"
+              style={{
+                background: 'var(--orange)',
+                color: 'var(--steel)',
+                boxShadow: '0 6px 18px rgba(255,107,26,.28)',
+              }}
+              href={contact.resumeHref}
+              download={contact.resumeFilename}
+            >
+              Spec sheet ↓ résumé
+            </a>
+          )}
           <a
             className="sign-type text-[11px] transition-colors hover:text-[color:var(--orange)]"
             style={{ color: 'var(--chalk-dim)' }}

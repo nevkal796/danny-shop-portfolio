@@ -19,9 +19,13 @@ export const contact = {
   // Resume prints "linkedin.com/in/danielkarun" but the embedded hyperlink
   // points at the URL below. ← NEEDS DANIEL: which one is live?
   linkedin: 'https://www.linkedin.com/in/daniel-karun-234710276',
-  // Resume lists (475)-218-7698. Deliberately not published — a personal
-  // mobile on a public page invites spam. ← NEEDS DANIEL if he wants it up.
-  resumeHref: '/resume.pdf',
+  // Phone deliberately not published: a personal mobile on a public page
+  // gets scraped. ← NEEDS DANIEL if he ever wants it shown.
+  //
+  // resumeHref stays null until a web-safe PDF (no personal phone number)
+  // is dropped in as public/resume.pdf. While null, every Resume button
+  // hides itself rather than linking to a 404.
+  resumeHref: null,
   resumeFilename: 'Daniel-Karun-Resume.pdf',
 }
 

@@ -252,14 +252,16 @@ export default function ShopFloor() {
           >
             ← Back outside
           </button>
-          <a
-            href={contact.resumeHref}
-            download={contact.resumeFilename}
-            className="cur-lg sign-type rounded-[2px] px-3 py-[6px] text-[10px]"
-            style={{ background: 'var(--orange)', color: 'var(--steel)' }}
-          >
-            Résumé ↓
-          </a>
+          {contact.resumeHref && (
+            <a
+              href={contact.resumeHref}
+              download={contact.resumeFilename}
+              className="cur-lg sign-type rounded-[2px] px-3 py-[6px] text-[10px]"
+              style={{ background: 'var(--orange)', color: 'var(--steel)' }}
+            >
+              Résumé ↓
+            </a>
+          )}
         </div>
 
         <div className="mt-4 text-center">
