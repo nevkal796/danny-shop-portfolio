@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { boxFaces, floorPad, iso, pts, wallLeft, wallRight } from '../lib/iso'
+import { SceneryDetail, SceneryWalls } from './shop/Scenery'
 import { shopZones } from '../data/zones'
 import { contact, identity } from '../data/content'
 
@@ -297,24 +298,10 @@ export default function ShopFloor() {
       {/* ── THE SCENE ────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl px-3 sm:px-8">
        <div className="relative">
-        {/* viewBox is cropped to the room's real extent (y 91–610 plus a
-            margin) instead of the full 680, so the scene does not carry a
-            band of empty space at the top and bottom on every screen. */}
-        <svg viewBox="0 58 1000 580" className="w-full" role="group" aria-label="Shop floor map">
-          <defs>
-            <radialGradient id="coolPool" cx="50%" cy="50%">
-              <stop offset="0%" stopColor="#8fb8d8" stopOpacity=".22" />
-              <stop offset="100%" stopColor="#8fb8d8" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="warmPool" cx="50%" cy="50%">
-              <stop offset="0%" stopColor="#ffb870" stopOpacity=".20" />
-              <stop offset="100%" stopColor="#ffb870" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          {/* Walls — cool on the tool side, warm on the office side */}
-          <polygon points={wallLeft(0, 9, 0, 3.1)} fill="#2b2521" />
-          <polygon points={wallRight(0, 9, 0, 3.1)} fill="#272c33" />
+        {/* Cropped to the room's real extent, with headroom at the top for
+            the roof trusses and for the info card's upper corner slots. */}
+        <svg viewBox="0 -30 1000 668" className="w-full" role="group" aria-label="Shop floor map">
+          <SceneryWalls />
 
           {/* Floor. Tapping bare floor cancels a pending selection. */}
           <polygon
@@ -324,29 +311,7 @@ export default function ShopFloor() {
             onClick={clearSelection}
           />
 
-          {/* Floor grid */}
-          {Array.from({ length: 10 }).map((_, i) => (
-            <g key={i} stroke="rgba(232,230,225,.05)" strokeWidth="1">
-              <line
-                x1={iso(i, 0)[0]} y1={iso(i, 0)[1]}
-                x2={iso(i, 9)[0]} y2={iso(i, 9)[1]}
-              />
-              <line
-                x1={iso(0, i)[0]} y1={iso(0, i)[1]}
-                x2={iso(9, i)[0]} y2={iso(9, i)[1]}
-              />
-            </g>
-          ))}
-
-          {/* Light pools */}
-          <ellipse cx={iso(4.5, 1)[0]} cy={iso(4.5, 1)[1]} rx="250" ry="120" fill="url(#coolPool)" />
-          <ellipse cx={iso(1.5, 5.5)[0]} cy={iso(1.5, 5.5)[1]} rx="230" ry="115" fill="url(#warmPool)" />
-
-          {/* Daylight spilling in from the open door behind the viewer */}
-          <ellipse
-            cx={iso(8.4, 8.4)[0]} cy={iso(8.4, 8.4)[1]}
-            rx="220" ry="95" fill="url(#warmPool)" opacity=".8"
-          />
+          <SceneryDetail />
 
           {/* Zones, far to near */}
           {ordered.map((z) => {

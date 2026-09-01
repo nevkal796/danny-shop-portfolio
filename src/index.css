@@ -206,6 +206,15 @@
     );
   }
 
+  /* Fine hangar detail: trusses, racking, bins, small clutter. At phone
+     width the scene is drawn small enough that this reads as noise, so it
+     is dropped and the room keeps only its big shapes. */
+  @media (max-width: 639px) {
+    .shop-detail {
+      display: none;
+    }
+  }
+
   /* Touch vs pointer copy. Driven purely by the media query so the wording
      can never disagree with the device — no JS, no hydration guesswork. */
   .touch-only {
