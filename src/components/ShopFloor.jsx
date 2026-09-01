@@ -201,15 +201,14 @@ function ZoneObjects({ id, hot }) {
 // Painter's order: farthest (smallest x+y) drawn first.
 const DEPTH = ['experience', 'skills', 'education', 'about', 'projects', 'contact']
 
-// Touch devices get no hover, so a first tap identifies the area and a
-// second tap enters it. Pointing devices go straight in on click.
-const CAN_HOVER =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(hover: hover)').matches
-
 export default function ShopFloor() {
   const navigate = useNavigate()
   const [hover, setHover] = useState(null)
+
+  // Which zone is "armed" — tapped once and awaiting a confirming tap.
+  // Touch only; a mouse never arms anything.
+  const [armed, setArmed] = useState(null)
+  const pointerType = useRef('mouse')
 
   // Client-side navigation keeps the previous page's scroll position, so
   // arriving from the exterior would drop you halfway down the room.
@@ -217,9 +216,30 @@ export default function ShopFloor() {
     window.scrollTo(0, 0)
   }, [])
 
+  // Two-tap on touch: the first tap raises the card, the second goes in.
+  //
+  // This deliberately does NOT test the hover state. Mobile browsers fire a
+  // synthetic mouseover before click, so `hover` is already set by the time
+  // click runs — keying off it would send the very first tap straight in.
+  // `armed` is only ever set from a real touch pointer, so it can't be
+  // spoofed by that synthetic mouse event.
   const activate = (id) => {
-    if (CAN_HOVER || hover === id) navigate('/' + id)
-    else setHover(id)
+    const touch =
+      pointerType.current === 'touch' || pointerType.current === 'pen'
+    if (!touch || armed === id) {
+      navigate('/' + id)
+      return
+    }
+    setArmed(id)
+    setHover(id)
+  }
+
+  // Tapping bare floor backs out of a pending selection.
+  const clearSelection = () => {
+    if (pointerType.current === 'touch' || pointerType.current === 'pen') {
+      setArmed(null)
+      setHover(null)
+    }
   }
 
   const ordered = DEPTH.map((id) => shopZones.find((z) => z.id === id))
@@ -296,8 +316,13 @@ export default function ShopFloor() {
           <polygon points={wallLeft(0, 9, 0, 3.1)} fill="#2b2521" />
           <polygon points={wallRight(0, 9, 0, 3.1)} fill="#272c33" />
 
-          {/* Floor */}
-          <polygon points={floorPad(0, 0, 9, 9)} fill="#191c20" />
+          {/* Floor. Tapping bare floor cancels a pending selection. */}
+          <polygon
+            points={floorPad(0, 0, 9, 9)}
+            fill="#191c20"
+            onPointerDown={(e) => (pointerType.current = e.pointerType)}
+            onClick={clearSelection}
+          />
 
           {/* Floor grid */}
           {Array.from({ length: 10 }).map((_, i) => (
@@ -334,8 +359,13 @@ export default function ShopFloor() {
                 role="link"
                 tabIndex={0}
                 aria-label={`${z.name} — ${z.desc}`}
+                onPointerDown={(e) => (pointerType.current = e.pointerType)}
                 onMouseEnter={() => setHover(z.id)}
-                onMouseLeave={() => setHover(null)}
+                // On touch the card must stay up until the confirming tap,
+                // so only a real mouse is allowed to dismiss it.
+                onMouseLeave={() => {
+                  if (pointerType.current === 'mouse') setHover(null)
+                }}
                 onFocus={() => setHover(z.id)}
                 onBlur={() => setHover(null)}
                 onClick={() => activate(z.id)}
@@ -425,24 +455,40 @@ export default function ShopFloor() {
               {shown?.desc ?? ''}
             </p>
             <p
-              className="tech-type mt-2 text-[8px]"
+              className="tech-type hover-only mt-2 text-[8px]"
               style={{ color: 'var(--chalk-faint)' }}
             >
-              {CAN_HOVER ? 'CLICK TO ENTER' : 'TAP AGAIN TO ENTER'}
+              CLICK TO ENTER
+            </p>
+            <p
+              className="tech-type touch-only mt-2 text-[8px]"
+              style={{ color: 'var(--orange)' }}
+            >
+              TAP AGAIN TO ENTER
             </p>
           </div>
         </div>
        </div>
       </div>
 
-      <p
-        className="tech-type mx-auto max-w-6xl px-5 pb-10 pt-2 text-center text-[10px] sm:px-8"
-        style={{ color: 'var(--chalk-faint)' }}
-      >
-        {CAN_HOVER
-          ? 'Hover an area, then click to go in'
-          : 'Tap an area to see what it is'}
-      </p>
+      <div className="mx-auto max-w-6xl px-5 pb-10 pt-2 text-center sm:px-8">
+        <p
+          className="tech-type hover-only text-[10px]"
+          style={{ color: 'var(--chalk-faint)' }}
+        >
+          Hover an area, then click to go in
+        </p>
+
+        {/* Mobile only: the two-tap rule, spelled out. */}
+        <p
+          className="tech-type touch-only mx-auto max-w-[300px] text-[10px] leading-relaxed"
+          style={{ color: 'var(--chalk-faint)' }}
+        >
+          <span style={{ color: 'var(--orange)' }}>Tap once</span> to see what
+          an area is —{' '}
+          <span style={{ color: 'var(--orange)' }}>tap again</span> to go in
+        </p>
+      </div>
     </main>
   )
 }

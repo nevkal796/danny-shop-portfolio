@@ -206,6 +206,20 @@
     );
   }
 
+  /* Touch vs pointer copy. Driven purely by the media query so the wording
+     can never disagree with the device — no JS, no hydration guesswork. */
+  .touch-only {
+    display: none;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .touch-only {
+      display: block;
+    }
+    .hover-only {
+      display: none;
+    }
+  }
+
   .sign-type {
     font-family: 'Barlow Condensed', Impact, sans-serif;
     text-transform: uppercase;
