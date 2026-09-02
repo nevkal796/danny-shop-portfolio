@@ -204,13 +204,15 @@ export const education = {
   // Resume states no honours. The previous "Dean's List" was invented and
   // has been removed. ← NEEDS DANIEL if he has any to list.
   honours: [],
-  // Listed verbatim from the resume. Note "Nonmettalic Metals" appears to
-  // be a typo in the source — see question.
+  // From the resume. One correction: the resume prints "Nonmettalic Metals",
+  // which is both misspelled and self-contradictory (a nonmetallic metal).
+  // Corrected here to the real A&M course name. ← TELL DANIEL: the typo is
+  // still on the PDF he sends to recruiters.
   coursework: [
     'Aerospace Engineering Mechanics',
     'Linear Algebra',
     'Manufacturing / Assembly Process',
-    'Nonmettalic Metals',
+    'Nonmetallic Materials',
   ],
 }
 
