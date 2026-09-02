@@ -1,203 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { boxFaces, floorPad, iso, pts, wallLeft, wallRight } from '../lib/iso'
+import { floorPad, iso } from '../lib/iso'
 import { SceneryDetail, SceneryWalls } from './shop/Scenery'
+import ZoneObjects from './shop/ZoneObjects'
+import { SHOP } from './shop/palette'
 import { shopZones } from '../data/zones'
 import { contact, identity } from '../data/content'
-
-const FACE = { top: '#40474f', right: '#2c3138', left: '#23272d' }
-const HOT = { top: '#8d5429', right: '#63391a', left: '#4a2a12' }
-
-function Box({ x, y, z = 0, w, d, h, hot, tint }) {
-  const f = boxFaces(x, y, z, w, d, h)
-  const c = hot ? HOT : tint || FACE
-  return (
-    <g>
-      <polygon points={f.left} fill={c.left} />
-      <polygon points={f.right} fill={c.right} />
-      <polygon points={f.top} fill={c.top} />
-    </g>
-  )
-}
-
-// ── Per-zone furniture ──────────────────────────────────────
-function ZoneObjects({ id, hot }) {
-  const line = hot ? 'var(--orange)' : 'rgba(127,178,217,.45)'
-
-  if (id === 'skills')
-    return (
-      <>
-        {/* Pegboard hung on the back-right wall */}
-        <polygon
-          points={wallRight(2.4, 6.6, 1.15, 2.75)}
-          fill={hot ? 'rgba(255,107,26,.30)' : '#1d2126'}
-          stroke={line}
-          strokeWidth="1.2"
-        />
-        {Array.from({ length: 7 }).map((_, i) =>
-          Array.from({ length: 4 }).map((__, j) => {
-            const [px, py] = iso(2.7 + i * 0.55, 0, 1.35 + j * 0.36)
-            return (
-              <circle
-                key={`${i}-${j}`}
-                cx={px}
-                cy={py}
-                r="2"
-                fill={hot ? 'rgba(255,107,26,.55)' : 'rgba(232,230,225,.16)'}
-              />
-            )
-          })
-        )}
-        {/* Workbench */}
-        <Box x={2.6} y={0.25} w={4.2} d={1.1} h={0.75} hot={hot} />
-      </>
-    )
-
-  if (id === 'experience')
-    return (
-      <>
-        {[0, 1].map((i) => (
-          <polygon
-            key={i}
-            points={wallLeft(1.5 + i * 1.4, 2.6 + i * 1.4, 1.35, 2.65)}
-            fill={hot ? 'rgba(255,107,26,.28)' : '#d9d2c4'}
-            stroke={line}
-            strokeWidth="1.2"
-          />
-        ))}
-      </>
-    )
-
-  if (id === 'education')
-    return (
-      <>
-        <polygon
-          points={wallLeft(5.2, 7.0, 1.5, 2.75)}
-          fill={hot ? 'rgba(255,107,26,.28)' : '#4a3626'}
-          stroke={line}
-          strokeWidth="1.4"
-        />
-        <polygon
-          points={wallLeft(5.45, 6.75, 1.65, 2.6)}
-          fill={hot ? 'rgba(255,107,26,.4)' : '#efeade'}
-        />
-      </>
-    )
-
-  if (id === 'about')
-    return (
-      <>
-        {/* Desk */}
-        <Box x={2.0} y={5.9} w={2.0} d={1.1} h={0.78} hot={hot} />
-        {/* Clipboard on top */}
-        <polygon
-          points={pts([
-            [2.4, 6.15, 0.78],
-            [3.2, 6.15, 0.78],
-            [3.2, 6.75, 0.78],
-            [2.4, 6.75, 0.78],
-          ])}
-          fill={hot ? 'var(--orange)' : '#efeade'}
-        />
-      </>
-    )
-
-  if (id === 'projects')
-    return (
-      <>
-        {/* Drafting table */}
-        <Box x={3.9} y={3.4} w={2.9} d={2.3} h={0.82} hot={hot} />
-        {/* Blueprint sheets laid on it */}
-        {[0, 1, 2].map((i) => (
-          <polygon
-            key={i}
-            points={pts([
-              [4.2 + i * 0.22, 3.7 + i * 0.16, 0.82],
-              [5.6 + i * 0.22, 3.7 + i * 0.16, 0.82],
-              [5.6 + i * 0.22, 4.9 + i * 0.16, 0.82],
-              [4.2 + i * 0.22, 4.9 + i * 0.16, 0.82],
-            ])}
-            fill={hot ? 'rgba(255,107,26,.55)' : '#16324f'}
-            stroke={hot ? 'var(--orange)' : 'rgba(127,178,217,.5)'}
-            strokeWidth="1"
-          />
-        ))}
-        {/* The aircraft, on a stand behind the table */}
-        <Box x={5.9} y={4.3} w={0.35} d={0.35} h={1.05} hot={hot} />
-        {/* Swept, tapered wing */}
-        <polygon
-          points={pts([
-            [5.15, 4.54, 1.05],
-            [5.94, 4.36, 1.05],
-            [6.21, 4.36, 1.05],
-            [6.9, 4.54, 1.05],
-            [6.9, 4.66, 1.05],
-            [6.21, 4.76, 1.05],
-            [5.94, 4.76, 1.05],
-            [5.15, 4.66, 1.05],
-          ])}
-          fill={hot ? 'var(--orange)' : '#aab2ba'}
-          stroke="rgba(0,0,0,.45)"
-          strokeWidth=".8"
-        />
-        {/* Tailplane */}
-        <polygon
-          points={pts([
-            [5.68, 3.9, 1.05],
-            [6.47, 3.9, 1.05],
-            [6.47, 4.02, 1.05],
-            [5.68, 4.02, 1.05],
-          ])}
-          fill={hot ? 'var(--orange)' : '#9aa2ab'}
-          stroke="rgba(0,0,0,.45)"
-          strokeWidth=".8"
-        />
-        {/* Fuselage, nose forward */}
-        <polygon
-          points={pts([
-            [6.075, 5.45, 1.05],
-            [6.21, 5.12, 1.05],
-            [6.21, 3.82, 1.05],
-            [5.94, 3.82, 1.05],
-            [5.94, 5.12, 1.05],
-          ])}
-          fill={hot ? '#ffd0ad' : '#ccd2d8'}
-          stroke="rgba(0,0,0,.45)"
-          strokeWidth=".8"
-        />
-        {/* Tail fin */}
-        <polygon
-          points={pts([
-            [6.07, 3.8, 1.05],
-            [6.07, 4.28, 1.05],
-            [6.07, 4.28, 1.5],
-            [6.07, 3.8, 1.5],
-          ])}
-          fill={hot ? 'var(--orange)' : '#9aa2ab'}
-          stroke="rgba(0,0,0,.45)"
-          strokeWidth=".8"
-        />
-      </>
-    )
-
-  if (id === 'contact')
-    return (
-      <>
-        <Box x={6.9} y={6.8} w={1.9} d={1.0} h={0.95} hot={hot} />
-        <polygon
-          points={pts([
-            [7.2, 7.0, 0.95],
-            [7.9, 7.0, 0.95],
-            [7.9, 7.5, 0.95],
-            [7.2, 7.5, 0.95],
-          ])}
-          fill={hot ? 'var(--orange)' : '#efeade'}
-        />
-      </>
-    )
-
-  return null
-}
 
 // Painter's order: farthest (smallest x+y) drawn first.
 const DEPTH = ['experience', 'skills', 'education', 'about', 'projects', 'contact']
@@ -301,17 +109,27 @@ export default function ShopFloor() {
         {/* Cropped to the room's real extent, with headroom at the top for
             the roof trusses and for the info card's upper corner slots. */}
         <svg viewBox="0 -30 1000 668" className="w-full" role="group" aria-label="Shop floor map">
-          <SceneryWalls />
+          {/* Scenery dims while a bay is selected, so a busy room stays
+              readable. Both children are memoized and take no props, so
+              only this wrapper re-renders. */}
+          <g
+            style={{
+              opacity: hover ? 0.42 : 1,
+              transition: 'opacity 180ms ease',
+            }}
+          >
+            <SceneryWalls />
 
-          {/* Floor. Tapping bare floor cancels a pending selection. */}
-          <polygon
-            points={floorPad(0, 0, 9, 9)}
-            fill="#191c20"
-            onPointerDown={(e) => (pointerType.current = e.pointerType)}
-            onClick={clearSelection}
-          />
+            {/* Floor. Tapping bare floor cancels a pending selection. */}
+            <polygon
+              points={floorPad(0, 0, 9, 9)}
+              fill={SHOP.floor}
+              onPointerDown={(e) => (pointerType.current = e.pointerType)}
+              onClick={clearSelection}
+            />
 
-          <SceneryDetail />
+            <SceneryDetail />
+          </g>
 
           {/* Zones, far to near */}
           {ordered.map((z) => {
@@ -338,13 +156,18 @@ export default function ShopFloor() {
                   (e.key === 'Enter' || e.key === ' ') &&
                   (e.preventDefault(), navigate('/' + z.id))
                 }
+                style={{
+                  opacity: hover && !hot ? 0.42 : 1,
+                  transition: 'opacity 180ms ease',
+                }}
               >
-                {/* Bay marking — always visible, so the map reads as a map */}
+                {/* Bay marking. Yellow is permanent floor paint; orange is
+                    reserved for the bay you are actually selecting. */}
                 <polygon
                   points={floorPad(...z.pad)}
-                  fill={hot ? 'rgba(255,107,26,.20)' : 'rgba(255,107,26,.045)'}
-                  stroke={hot ? 'var(--orange)' : 'rgba(255,107,26,.38)'}
-                  strokeWidth={hot ? 2 : 1.2}
+                  fill={hot ? 'rgba(255,107,26,.24)' : SHOP.bayFill}
+                  stroke={hot ? 'var(--orange)' : SHOP.bayLine}
+                  strokeWidth={hot ? 2.2 : 1.3}
                   strokeDasharray="7 5"
                   style={{ transition: 'fill 160ms ease, stroke 160ms ease' }}
                 />

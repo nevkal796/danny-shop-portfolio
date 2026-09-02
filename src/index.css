@@ -209,7 +209,7 @@
   /* Fine hangar detail: trusses, racking, bins, small clutter. At phone
      width the scene is drawn small enough that this reads as noise, so it
      is dropped and the room keeps only its big shapes. */
-  @media (max-width: 639px) {
+  @media (max-width: 559px) {
     .shop-detail {
       display: none;
     }
