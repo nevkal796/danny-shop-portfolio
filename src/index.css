@@ -319,6 +319,55 @@
   }
 }
 
+/* ── Shop-floor idle motion ─────────────────────────────────
+   Small, slow, and never near the content. All three are switched off by
+   the prefers-reduced-motion block further down. */
+
+/* Gantry trolley tracking along its rail. The rail runs along +x in iso,
+   so screen travel is (dx, dx/2) — 4.4 grid units at 46/23 per unit. */
+@keyframes crane-traverse {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(202px, 101px);
+  }
+}
+
+@keyframes fan-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* One tube on its way out: steady for ten seconds, then a stutter. */
+@keyframes tube-flicker {
+  0%,
+  88%,
+  100% {
+    opacity: 1;
+  }
+  89% {
+    opacity: 0.25;
+  }
+  90% {
+    opacity: 1;
+  }
+  91% {
+    opacity: 0.45;
+  }
+  92% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.3;
+  }
+  94% {
+    opacity: 1;
+  }
+}
+
 /* Altimeter / gauge needle. */
 .needle {
   transform-origin: 50% 50%;

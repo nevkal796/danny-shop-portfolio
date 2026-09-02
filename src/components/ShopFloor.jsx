@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { floorPad, iso } from '../lib/iso'
-import { SceneryDetail, SceneryWalls } from './shop/Scenery'
+import {
+  SceneryBack,
+  SceneryFront,
+  SceneryMid,
+  SceneryWalls,
+} from './shop/Scenery'
 import ZoneObjects from './shop/ZoneObjects'
 import { SHOP } from './shop/palette'
 import { shopZones } from '../data/zones'
@@ -128,16 +133,29 @@ export default function ShopFloor() {
               onClick={clearSelection}
             />
 
-            <SceneryDetail />
+            <SceneryBack />
           </g>
 
-          {/* Zones, far to near */}
+          {/* Zones, far to near, with the nearer scenery layers spliced in
+              at their real depth. Props are not all behind the bays: the
+              tool chest sits in front of the bookshelf, the fan and racking
+              in front of the drafting table. */}
           {ordered.map((z) => {
             const hot = hover === z.id
             const [lx, ly] = iso(z.labelAt[0], z.labelAt[1], z.labelZ)
             return (
+              <Fragment key={z.id}>
+                {z.id === 'about' && (
+                  <g style={{ opacity: hover ? 0.42 : 1, transition: 'opacity 180ms ease' }}>
+                    <SceneryMid />
+                  </g>
+                )}
+                {z.id === 'contact' && (
+                  <g style={{ opacity: hover ? 0.42 : 1, transition: 'opacity 180ms ease' }}>
+                    <SceneryFront />
+                  </g>
+                )}
               <g
-                key={z.id}
                 className="cur-lg"
                 role="link"
                 tabIndex={0}
@@ -200,6 +218,7 @@ export default function ShopFloor() {
                   </text>
                 </g>
               </g>
+              </Fragment>
             )
           })}
         </svg>
